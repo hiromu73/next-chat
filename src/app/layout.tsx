@@ -4,11 +4,8 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { Inter } from "next/font/google";
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
 } from '@clerk/nextjs'
+import { dark } from '@clerk/themes'
 // import localFont from "next/font/local";
 import "./globals.css";
 // import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -72,7 +69,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider  appearance={{
+      baseTheme: dark,
+      layout: {
+      socialButtonsPlacement: 'bottom',
+      socialButtonsVariant: 'iconButton',
+      termsPageUrl: 'https://clerk.com/terms'
+    }
+    }}>
       <html lang="en">
         <body className={inter.className}>
           <AppRouterCacheProvider>
