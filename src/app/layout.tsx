@@ -1,19 +1,11 @@
-
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { Inter } from "next/font/google";
-import {
-  ClerkProvider,
-} from '@clerk/nextjs'
-import { dark } from '@clerk/themes'
-// import localFont from "next/font/local";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import "./globals.css";
-// import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import {
-  Box,
-  CssBaseline,
-} from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -34,60 +26,31 @@ export const metadata: Metadata = {
   description: "Debete App",
 };
 
-  // const darkTheme = createTheme({
-  //   palette: {
-  //     mode: 'dark',
-  //     background: {
-  //       paper: '#212121',
-  //     },
-  //     primary: {
-  //       main: '#2F2F2F',
-  //     },
-  //     secondary: {
-  //       main: '#2E2E2E'
-  //     },
-  //     text: {
-  //     primary: '#fff',
-  //     secondary: '#46505A',
-  //   },
-  //   }
-  // })
-
-  // const lightTheme = createTheme({
-  //   palette: {
-  //     mode: 'light',
-  //     secondary: {
-  //       main: '#FFFFFF',
-  //       light: '#F0F4F8',
-  //       }
-  //     }
-  // })
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider  appearance={{
-      baseTheme: dark,
-      layout: {
-      socialButtonsPlacement: 'bottom',
-      socialButtonsVariant: 'iconButton',
-      termsPageUrl: 'https://clerk.com/terms'
-    }
-    }}>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        layout: {
+          socialButtonsPlacement: "bottom",
+          socialButtonsVariant: "iconButton",
+          termsPageUrl: "https://clerk.com/terms",
+        },
+      }}
+    >
       <html lang="en">
         <body className={inter.className}>
           <AppRouterCacheProvider>
-            {/* <ThemeProvider theme={darkTheme}> */}
             <Box sx={{ display: "flex" }}>
               <CssBaseline />
-              <Box component="main" sx={{ flexGrow: 1, width: '100%' }}>
+              <Box component="main" sx={{ flexGrow: 1, width: "100%" }}>
                 {children}
               </Box>
             </Box>
-            {/* </ThemeProvider> */}
           </AppRouterCacheProvider>
         </body>
       </html>

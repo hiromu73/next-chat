@@ -1,10 +1,11 @@
 "use client";
-import React, { useActionState, useEffect, useRef, useState } from "react";
+import React, { useActionState, useContext, useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { actionMessage, State } from "../api/chat/actions";
+import { ChatContext } from "../contexts/ChatContext";
 
 export const inisialState: State = {
   result: null,
@@ -21,6 +22,7 @@ const Textfield = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [state, dispatch] = useActionState(actionMessage, inisialState);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const optins = useContext(ChatContext);
 
   const adjustHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
