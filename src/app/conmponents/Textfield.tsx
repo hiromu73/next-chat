@@ -1,14 +1,18 @@
+"use client";
 import React, { useActionState, useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Box, IconButton, Input, InputAdornment } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { actionMessage, State } from "../api/chat/actions";
-import { on } from "events";
 
 export const inisialState: State = {
   result: null,
   message: null,
+};
+
+type Props = {
+  setInput: string;
 };
 
 const Textfield = () => {
@@ -33,13 +37,19 @@ const Textfield = () => {
 
   console.log("state");
   console.log(state);
+  if (state.result == "ok") {
+    console.log(state);
+  }
 
   const handleSubmit = async () => {
     if (formRef.current) {
       const formData = new FormData(formRef.current);
+      setText(formData.get("userMessage") as string);
+      // コールバック関数
+      // 別の関数の中に関数の実行
       dispatch(formData);
+
       formRef.current.reset();
-      setText("");
     }
   };
 
