@@ -17,7 +17,7 @@ const Header = ({ isOpen, setIsOpen, setOptions }: HeaderProps) => {
   console.log(chatContext);
 
   return (
-    <Box sx={{ p: 4, bgcolor: (theme) => theme.palette.background.paper, width: "100%", display: "flex", alignItems: "center", gap: "20px" }}>
+    <Box sx={{ p: 2, bgcolor: (theme) => theme.palette.background.paper, width: "100%", display: "flex", alignItems: "center", gap: "10px" }}>
       {!isOpen && (
         <IconButton edge="start" color="inherit" aria-label="menu" id="menu-button" onClick={() => setIsOpen(!isOpen)} sx={{ mr: 2 }}>
           <MenuIcon />
@@ -27,7 +27,7 @@ const Header = ({ isOpen, setIsOpen, setOptions }: HeaderProps) => {
         {/* Chat中はdisable, 初回は必須にする */}
         <Options setOptions={setOptions} />
       </Box>
-      <Box sx={{ flexGrow: 14 }}>
+      <Box sx={{ flexGrow: 10 }}>
         <Typography variant="h5" sx={{}}>
           {chatContext.title}
         </Typography>

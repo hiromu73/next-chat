@@ -4,10 +4,14 @@ import NativeSelect from "@mui/material/NativeSelect";
 import React from "react";
 
 type Props = {
-  setOptions: (options: string) => void;
+  setOptions?: (options: string) => void;
+  setIsOpen?: (isOpen: boolean) => void;
+  setModel?: (model: string) => void;
+  setType?: (model: string) => void;
+  mode?: boolean;
 };
-const Options = (setOptions: Props) => {
-  return (
+const Options = ({ setOptions, setIsOpen, setModel, setType, mode }: Props) => {
+  return setOptions ? (
     <FormControl fullWidth disabled={false}>
       <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{ color: "#fff" }}>
         <p>Agree or Disagree ?</p>
@@ -18,10 +22,46 @@ const Options = (setOptions: Props) => {
           name: "option",
           id: "uncontrolled-native",
         }}
-        onChange={(e) => setOptions.setOptions(e.target.value)}
+        onChange={(e) => setOptions!(e.target.value)}
       >
-        <option value={"Agree"}>Agree</option>
-        <option value={"Disagree"}>Disagree</option>
+        <option value={"賛成"}>Agree</option>
+        <option value={"反対"}>Disagree</option>
+      </NativeSelect>
+    </FormControl>
+  ) : mode ? (
+    <FormControl fullWidth disabled={false} sx={{ mt: 2 }}>
+      <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{ color: "#fff" }}>
+        <p>Mode</p>
+      </InputLabel>
+      <NativeSelect
+        defaultValue={30}
+        inputProps={{
+          name: "option",
+          id: "uncontrolled-native",
+        }}
+        onChange={(e) => setModel!(e.target.value)}
+      >
+        <option value={"Normal"}>Normal</option>
+        <option value={"Easy"}>Easy</option>
+        <option value={"Hard"}>Hard</option>
+      </NativeSelect>
+    </FormControl>
+  ) : (
+    <FormControl fullWidth disabled={false} sx={{ mt: 2 }}>
+      <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{ color: "#fff" }}>
+        <p>Type</p>
+      </InputLabel>
+      <NativeSelect
+        defaultValue={30}
+        inputProps={{
+          name: "option",
+          id: "uncontrolled-native",
+        }}
+        onChange={(e) => setType!(e.target.value)}
+      >
+        <option value={"Normal"}>普通</option>
+        <option value={"Uncle"}>おじさん風</option>
+        <option value={"Gal"}>ギャル風</option>
       </NativeSelect>
     </FormControl>
   );

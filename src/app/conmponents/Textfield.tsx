@@ -13,47 +13,16 @@ export const inisialState: State = {
 };
 
 type Props = {
-  setInput: string;
+  setMessages: (message: string[]) => void;
 };
 
-const Textfield = () => {
+const Textfield = ({ setMessages }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [text, setText] = useState("");
+  const [pronput, setPronput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [state, dispatch] = useActionState(actionMessage, inisialState);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const optins = useContext(ChatContext);
-
-  const adjustHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  };
-
-  useEffect(() => {
-    const trimmedValue = text.replace(/\r?\n/g, "").trim(); // 改行と前後の空白を除去
-    setIsButtonDisabled(trimmedValue === "");
-  }, [text]);
-
-  console.log("state");
-  console.log(state);
-  if (state.result == "ok") {
-    console.log(state);
-  }
-
-  const handleSubmit = async () => {
-    if (formRef.current) {
-      const formData = new FormData(formRef.current);
-      setText(formData.get("userMessage") as string);
-      // コールバック関数
-      // 別の関数の中に関数の実行
-      dispatch(formData);
-
-      formRef.current.reset();
-    }
-  };
 
   const textformstyle: object = {
     flexGrow: 1,
@@ -92,16 +61,42 @@ const Textfield = () => {
     },
   };
 
+  const adjustHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPronput(e.target.value);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    const trimmedValue = pronput.replace(/\r?\n/g, "").trim();
+    setIsButtonDisabled(trimmedValue === "");
+  }, [pronput]);
+
+  const handleSubmit = async () => {
+    if (formRef.current) {
+      try {
+        const formData = new FormData(formRef.current);
+        const userMessage = formData.get("userMessage") as string;
+        // コールバック関数
+        // 別の関数の中に関数の実行
+        dispatch(formData);
+        // setMessages((prev) => {
+        //   return [...prev, pronput];
+        // });
+        formRef.current.reset();
+        setPronput("");
+      } catch (e) {
+        console.error("送信エラー:", e);
+      }
+    }
+  };
+
   return (
-    <form
-      ref={formRef}
-      action={handleSubmit}
-      style={{
-        width: "100%",
-      }}
-    >
+    <form ref={formRef} action={handleSubmit} style={{ width: "100%" }}>
       <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden", minHeight: "56px", borderRadius: "40px", width: "100%", bgcolor: (theme) => theme.palette.secondary.main, transition: "height 0.2s ease" }}>
-        <TextField sx={textformstyle} value={text} name="userMessage" placeholder="質問を入力して下さい" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
+        <TextField sx={textformstyle} value={pronput} name="userMessage" placeholder="質問を入力して下さい" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
         <Box sx={{ display: "flex", mr: 1, mb: 1, flexShrink: 0 }}>
           <IconButton
             onClick={() => {
@@ -110,7 +105,6 @@ const Textfield = () => {
           >
             <AddPhotoAlternateIcon />
           </IconButton>
-          {state.message}
           <IconButton disabled={isButtonDisabled} type="submit">
             <SendIcon />
           </IconButton>

@@ -1,6 +1,4 @@
 "use server";
-
-import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 
 export type State = {
@@ -15,7 +13,7 @@ export const actionMessage = async (_: State, formData: FormData): Promise<State
   const message = { answer: "賛成" };
   const body = {
     inputs: message,
-    query: inputMessage,
+    query: `${inputMessage} ${message}の意見を持っています`,
     // response_mode: "blocking",
     response_mode: "streaming",
     conversation_id: "",

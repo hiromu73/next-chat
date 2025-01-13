@@ -8,112 +8,50 @@ import Mode from "./Mode";
 import React from "react";
 
 import DraftsIcon from "@mui/icons-material/Drafts";
+import Options from "./Options";
 
 const drawerWidth = 240;
 interface SideBarProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   setModel: (model: string) => void;
+  setType: (model: string) => void;
 }
 
-const SideBar = ({ isOpen, setIsOpen, setModel }: SideBarProps) => {
-  const rows = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-  if (!isOpen) {
-    return null;
-  }
+const SideBar = ({ isOpen, setIsOpen, setModel, setType }: SideBarProps) => {
+  const rows = ["Test-Test-Test-Test-Test-Test1", "Test-Test-Test-Test-Test-Test12", "3", "4", "5", "6", "7", "8", "9", "Test-Test-Test-Test-Test-Test110---------", "12", "32323"];
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", bgcolor: (theme) => theme.palette.background.default }}>
-      <Box sx={{ p: 2, width: "100%", display: "flex", alignItems: "center" }}>
-        <IconButton edge="start" sx={{ mr: 20 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", m: 1, height: "100%" }}>
+      <Box sx={{ p: 2, width: "100%", display: "flex", justifyContent: "space-between", height: "10%" }}>
+        <IconButton edge="start">
           <MenuIcon
             onClick={() => {
               setIsOpen(!isOpen);
             }}
           />
         </IconButton>
-        <IconButton edge="start" sx={{ mr: 2 }}>
+        <IconButton edge="end">
           <CreateRoundedIcon />
         </IconButton>
       </Box>
-      <nav aria-label="main mailbox folders">
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Inbox" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <DraftsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Drafts" />
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </nav>
-      <Divider />
-      <nav aria-label="secondary mailbox folders">
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText primary="Trash" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton component="a" href="#simple-list">
-              <ListItemText primary="Spam" />
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </nav>
-
-      {/* <Box sx={{ flexGrow: 3 }}>
-        <Drawer
-          variant="permanent"
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
-              width: drawerWidth,
-              boxSizing: "border-box",
-              bgcolor: (theme) => theme.palette.background.default,
-            },
-          }}
-        >
-          <Box sx={{ p: 2, width: "100%", display: "flex", alignItems: "center" }}>
-            <IconButton edge="start" sx={{ mr: 20 }}>
-              <MenuIcon
-                onClick={() => {
-                  setIsOpen(!isOpen);
-                }}
-              />
-            </IconButton>
-            <IconButton edge="start" sx={{ mr: 2 }}>
-              <CreateRoundedIcon />
-            </IconButton>
-          </Box>
-          <Box sx={{ overflow: "auto" }}>
-            <List>
-              {rows.map((text, index) => (
-                <ListItem key={text} disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-            <Divider />
-          </Box>
-        </Drawer>
-      </Box> */}
-      <Box sx={{ width: "100%" , p:2}}>
-        <Mode setModel={setModel} />
+      <Box sx={{ flexGrow: 3, ml: 2, overflow: "auto", height: "65%" }}>
+        {rows.map((row, index) => (
+          <List key={index}>
+            <ListItem disablePadding>
+              <ListItemText primary={row} primaryTypographyProps={{ noWrap: true }} />
+            </ListItem>
+          </List>
+        ))}
+        <Divider />
+      </Box>
+      <Box sx={{ height: "25%" }}>
+        <Box sx={{ width: "100%", p: 1 }}>
+          <Options setModel={setModel} mode={true} />
+        </Box>
+        <Box sx={{ width: "100%", p: 1 }}>
+          <Options setType={setType} mode={false} />
+        </Box>
       </Box>
     </Box>
   );

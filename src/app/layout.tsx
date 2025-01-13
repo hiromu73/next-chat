@@ -47,7 +47,7 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <Box sx={{ display: "flex" }}>
               <CssBaseline />
-              <Box component="main" sx={{ flexGrow: 1, width: "100%" }}>
+              <Box component="main" sx={{ height: "100vh",width: "100vw" }}>
                 {children}
               </Box>
             </Box>
