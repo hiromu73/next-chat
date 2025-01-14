@@ -78,7 +78,7 @@ export const actionMessage = async (_: State, formData: FormData): Promise<State
       }
     }
 
-    revalidatePath("/chat");
+    // revalidatePath("/chat");
     return { result: "ok", message: result };
   } catch (error) {
     console.log(error);

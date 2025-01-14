@@ -69,6 +69,8 @@ export default function Home() {
     message: "", // Set関数: Text, state: ChatMessage
   };
 
+  console.log(chatInfo);
+
   return (
     <ChatProvider chatInfo={chatInfo}>
       <ThemeProvider theme={darkTheme}>

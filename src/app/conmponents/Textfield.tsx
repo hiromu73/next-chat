@@ -13,7 +13,7 @@ export const inisialState: State = {
 };
 
 type Props = {
-  setMessages: (message: string[]) => void;
+  setMessages: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const Textfield = ({ setMessages }: Props) => {
@@ -74,19 +74,24 @@ const Textfield = ({ setMessages }: Props) => {
     setIsButtonDisabled(trimmedValue === "");
   }, [pronput]);
 
+  useEffect(() => {
+    console.log("state.message", state.message);
+
+    setMessages((prev: string[]) => [...prev, state.message!]);
+  }, [state.message]);
+
   const handleSubmit = async () => {
     if (formRef.current) {
       try {
         const formData = new FormData(formRef.current);
-        const userMessage = formData.get("userMessage") as string;
-        // コールバック関数
-        // 別の関数の中に関数の実行
+        const proput = formData.get("proput") as string;
+        setMessages((prev: string[]) => [...prev, proput]);
         dispatch(formData);
-        // setMessages((prev) => {
-        //   return [...prev, pronput];
-        // });
+
         formRef.current.reset();
         setPronput("");
+        console.log("ok");
+        console.log(state.message);
       } catch (e) {
         console.error("送信エラー:", e);
       }
@@ -96,7 +101,7 @@ const Textfield = ({ setMessages }: Props) => {
   return (
     <form ref={formRef} action={handleSubmit} style={{ width: "100%" }}>
       <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden", minHeight: "56px", borderRadius: "40px", width: "100%", bgcolor: (theme) => theme.palette.secondary.main, transition: "height 0.2s ease" }}>
-        <TextField sx={textformstyle} value={pronput} name="userMessage" placeholder="質問を入力して下さい" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
+        <TextField sx={textformstyle} value={pronput} name="proput" placeholder="質問を入力して下さい" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
         <Box sx={{ display: "flex", mr: 1, mb: 1, flexShrink: 0 }}>
           <IconButton
             onClick={() => {

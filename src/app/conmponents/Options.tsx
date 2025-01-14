@@ -11,6 +11,8 @@ type Props = {
   mode?: boolean;
 };
 const Options = ({ setOptions, setIsOpen, setModel, setType, mode }: Props) => {
+  console.log("options");
+
   return setOptions ? (
     <FormControl fullWidth disabled={false}>
       <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{ color: "#fff" }}>

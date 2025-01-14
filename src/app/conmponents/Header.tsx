@@ -1,7 +1,7 @@
 // "use client";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import React, { useContext } from "react";
+import React, { memo, useContext } from "react";
 import Options from "./Options";
 import Auth from "./Auth";
 import { ChatContext } from "../contexts/ChatContext";
@@ -12,10 +12,9 @@ interface HeaderProps {
   setOptions: (options: string) => void;
 }
 
-const Header = ({ isOpen, setIsOpen, setOptions }: HeaderProps) => {
+const Header = memo(({ isOpen, setIsOpen, setOptions }: HeaderProps) => {
   const chatContext = useContext(ChatContext);
-  console.log(chatContext);
-
+  console.log("header");
   return (
     <Box sx={{ p: 2, bgcolor: (theme) => theme.palette.background.paper, width: "100%", display: "flex", alignItems: "center", gap: "10px" }}>
       {!isOpen && (
@@ -37,5 +36,5 @@ const Header = ({ isOpen, setIsOpen, setOptions }: HeaderProps) => {
       </Box>
     </Box>
   );
-};
+});
 export default Header;

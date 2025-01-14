@@ -5,7 +5,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import Mode from "./Mode";
-import React from "react";
+import React, { memo } from "react";
 
 import DraftsIcon from "@mui/icons-material/Drafts";
 import Options from "./Options";
@@ -18,8 +18,9 @@ interface SideBarProps {
   setType: (model: string) => void;
 }
 
-const SideBar = ({ isOpen, setIsOpen, setModel, setType }: SideBarProps) => {
+const SideBar = memo(({ isOpen, setIsOpen, setModel, setType }: SideBarProps) => {
   const rows = ["Test-Test-Test-Test-Test-Test1", "Test-Test-Test-Test-Test-Test12", "3", "4", "5", "6", "7", "8", "9", "Test-Test-Test-Test-Test-Test110---------", "12", "32323"];
+  console.log("sidbar");
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", m: 1, height: "100%" }}>
@@ -55,6 +56,6 @@ const SideBar = ({ isOpen, setIsOpen, setModel, setType }: SideBarProps) => {
       </Box>
     </Box>
   );
-};
+});
 
 export default SideBar;
