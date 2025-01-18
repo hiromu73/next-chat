@@ -5,7 +5,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import "./globals.css";
 
+
 import { Box, CssBaseline } from "@mui/material";
+import { ChatProvider } from "./conmponents/ChatProvider";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -47,9 +49,11 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <Box sx={{ display: "flex" }}>
               <CssBaseline />
-              <Box component="main" sx={{ height: "100vh",width: "100vw" }}>
-                {children}
-              </Box>
+              <ChatProvider>
+                <Box component="main" sx={{ height: "100vh", width: "100vw" }}>
+                  {children}
+                </Box>
+              </ChatProvider>
             </Box>
           </AppRouterCacheProvider>
         </body>

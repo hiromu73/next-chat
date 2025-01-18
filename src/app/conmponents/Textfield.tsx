@@ -6,6 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { actionMessage, State } from "../api/chat/actions";
 import { ChatContext } from "../contexts/ChatContext";
+import { useChatContext } from "./ChatProvider";
 
 export const inisialState: State = {
   result: null,
@@ -30,6 +31,7 @@ const Textfield = ({ setMessages }: Props) => {
 
   // const [state, dispatch] = useActionState(actionMessage, inisialState);
   const [state, dispatch] = useActionState(actionMessageWithOptions, inisialState);
+  const { title,setTitle } = useChatContext();
   const textformstyle: object = {
     flexGrow: 1,
     "& .MuiOutlinedInput-root": {
@@ -100,8 +102,8 @@ const Textfield = ({ setMessages }: Props) => {
           formRef.current.reset();
         }
         setInput("");
-        if (chatContext.title != "") {
-          chatContext.setTitle(userMessage);
+        if (title != "") {
+          setTitle(userMessage);
         }
       } catch (e) {
         console.error("送信エラー:", e);

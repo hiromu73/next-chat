@@ -2,18 +2,20 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import NativeSelect from "@mui/material/NativeSelect";
 import React from "react";
+import { useChatContext } from "./ChatProvider";
 
 type Props = {
   setOptions?: (options: string) => void;
   setIsOpen?: (isOpen: boolean) => void;
-  setModel?: (model: string) => void;
+  setMode?: (model: string) => void;
   setType?: (model: string) => void;
   mode?: boolean;
 };
-const Options = ({ setOptions, setIsOpen, setModel, setType, mode }: Props) => {
-  console.log("options");
+const Options = ({ setOptions, mode }: Props) => {
+const { setMode, setType } = useChatContext();
 
   return setOptions ? (
+    // 以下disabled判定が必要
     <FormControl fullWidth disabled={false}>
       <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{ color: "#fff" }}>
         <p>Agree or Disagree ?</p>
@@ -41,7 +43,7 @@ const Options = ({ setOptions, setIsOpen, setModel, setType, mode }: Props) => {
           name: "option",
           id: "uncontrolled-native",
         }}
-        onChange={(e) => setModel!(e.target.value)}
+        onChange={(e) => setMode!(e.target.value)}
       >
         <option value={"Normal"}>Normal</option>
         <option value={"Easy"}>Easy</option>
