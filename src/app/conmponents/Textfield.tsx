@@ -1,5 +1,5 @@
 "use client";
-import React, { useActionState, useContext, useEffect, useRef, useState } from "react";
+import React, { useActionState, useContext, useEffect, useRef, useState, useTransition } from "react";
 import TextField from "@mui/material/TextField";
 import { Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
@@ -18,12 +18,18 @@ type Props = {
 
 const Textfield = ({ setMessages }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [pronput, setPronput] = useState("");
+  const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [state, dispatch] = useActionState(actionMessage, inisialState);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const optins = useContext(ChatContext);
+  const [isPending, startTransition] = useTransition();
+  const chatContext = useContext(ChatContext);
+  const actionMessageWithOptions = async (state: State, formData: FormData) => {
+    return actionMessage(state, formData, chatContext.option);
+  };
+  // console.log(input);
 
+  // const [state, dispatch] = useActionState(actionMessage, inisialState);
+  const [state, dispatch] = useActionState(actionMessageWithOptions, inisialState);
   const textformstyle: object = {
     flexGrow: 1,
     "& .MuiOutlinedInput-root": {
@@ -62,7 +68,7 @@ const Textfield = ({ setMessages }: Props) => {
   };
 
   const adjustHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setPronput(e.target.value);
+    setInput(e.target.value);
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
@@ -70,38 +76,43 @@ const Textfield = ({ setMessages }: Props) => {
   };
 
   useEffect(() => {
-    const trimmedValue = pronput.replace(/\r?\n/g, "").trim();
+    const trimmedValue = input.replace(/\r?\n/g, "").trim();
     setIsButtonDisabled(trimmedValue === "");
-  }, [pronput]);
+  }, [input]);
 
-  useEffect(() => {
-    console.log("state.message", state.message);
+  // useEffect(() => {
+  //   console.log("state.message", state.message);
 
-    setMessages((prev: string[]) => [...prev, state.message!]);
-  }, [state.message]);
+  //   setMessages((prev: string[]) => [...prev, state.message!]);
+  // }, [state.message]);
 
-  const handleSubmit = async () => {
-    if (formRef.current) {
+  const handleSubmit = async (formData: FormData) => {
+    const userMessage = formData.get("userMessage") as string;
+
+    startTransition(async () => {
       try {
-        const formData = new FormData(formRef.current);
-        const proput = formData.get("proput") as string;
-        setMessages((prev: string[]) => [...prev, proput]);
-        dispatch(formData);
-
-        formRef.current.reset();
-        setPronput("");
-        console.log("ok");
-        console.log(state.message);
+        setMessages((prev: string[]) => [...prev, userMessage]);
+        const result = await actionMessageWithOptions(state, formData);
+        if (result.message) {
+          setMessages((prev: string[]) => [...prev, result.message!]);
+        }
+        if (formRef.current) {
+          formRef.current.reset();
+        }
+        setInput("");
+        if (chatContext.title != "") {
+          chatContext.setTitle(userMessage);
+        }
       } catch (e) {
         console.error("送信エラー:", e);
       }
-    }
+    });
   };
 
   return (
     <form ref={formRef} action={handleSubmit} style={{ width: "100%" }}>
       <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden", minHeight: "56px", borderRadius: "40px", width: "100%", bgcolor: (theme) => theme.palette.secondary.main, transition: "height 0.2s ease" }}>
-        <TextField sx={textformstyle} value={pronput} name="proput" placeholder="質問を入力して下さい" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
+        <TextField sx={textformstyle} value={input} name="userMessage" placeholder="質問を入力して下さい" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
         <Box sx={{ display: "flex", mr: 1, mb: 1, flexShrink: 0 }}>
           <IconButton
             onClick={() => {
@@ -110,7 +121,7 @@ const Textfield = ({ setMessages }: Props) => {
           >
             <AddPhotoAlternateIcon />
           </IconButton>
-          <IconButton disabled={isButtonDisabled} type="submit">
+          <IconButton disabled={isButtonDisabled || isPending} type="submit">
             <SendIcon />
           </IconButton>
         </Box>

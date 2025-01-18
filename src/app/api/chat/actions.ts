@@ -1,23 +1,23 @@
 "use server";
-import { revalidatePath } from "next/cache";
 
 export type State = {
   result: string | null;
   message: string | null;
 };
 
-export const actionMessage = async (_: State, formData: FormData): Promise<State> => {
+export const actionMessage = async (_: State, formData: FormData, options: string): Promise<State> => {
   const apiKey = process.env.DIFY_APIKEY || "";
   const inputMessage = formData.get("userMessage");
+  const option = options === "Agree" ? "賛成" : "反対";
 
-  const message = { answer: "賛成" };
+  const message = { answer: option };
   const body = {
-    inputs: message,
-    query: `${inputMessage} ${message}の意見を持っています`,
+    inputs: message, // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
+    query: `${inputMessage}に対して${option}の意見を持っています.`,
     // response_mode: "blocking",
     response_mode: "streaming",
-    conversation_id: "",
-    user: "abc-123",
+    conversation_id: "", //userIdを入れていく
+    user: "abc-123", //useName
     files: [
       {
         type: "image",
@@ -27,12 +27,7 @@ export const actionMessage = async (_: State, formData: FormData): Promise<State
     ],
   };
 
-  console.log("body-----");
-  console.log(body);
   try {
-    // DBにユーザーメッセージ追加
-
-    // DifyのAPIを実行
     const response = await fetch("https://api.dify.ai/v1/chat-messages", {
       cache: "force-cache",
       method: "POST",
@@ -68,17 +63,14 @@ export const actionMessage = async (_: State, formData: FormData): Promise<State
           const jsonStr = line.slice(6); // "data: " を除去
           try {
             const data = JSON.parse(jsonStr);
-            // ここでデータを処理
-            console.log("Received data:", data);
             result += data.answer || "";
           } catch (e) {
-            console.log("Invalid JSON in stream:", jsonStr);
+            console.log(`Invalid JSON in ${e}stream:`, jsonStr);
           }
         }
       }
     }
 
-    // revalidatePath("/chat");
     return { result: "ok", message: result };
   } catch (error) {
     console.log(error);
