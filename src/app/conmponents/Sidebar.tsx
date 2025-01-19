@@ -1,4 +1,3 @@
-// "use client";
 import { Box, Divider, IconButton, List, ListItem, ListItemText } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";

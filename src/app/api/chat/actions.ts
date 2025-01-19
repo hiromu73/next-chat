@@ -5,28 +5,45 @@ export type State = {
   message: string | null;
 };
 
-export const actionMessage = async (_: State, formData: FormData, options: string): Promise<State> => {
+export const actionMessage = async (_: State, formData: FormData, options?: string): Promise<State> => {
   const apiKey = process.env.DIFY_APIKEY || "";
   const inputMessage = formData.get("userMessage");
-  const option = options === "Agree" ? "賛成" : "反対";
 
-  const message = { answer: option };
-  const body = {
-    inputs: message, // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
-    query: `${inputMessage}に対して${option}の意見を持っています.`,
-    // response_mode: "blocking",
-    response_mode: "streaming",
-    conversation_id: "", //userIdを入れていく
-    user: "abc-123", //useName
-    files: [
-      {
-        type: "image",
-        transfer_method: "remote_url",
-        url: "https://cloud.dify.ai/logo/logo-site.png",
-      },
-    ],
-  };
+  const option = options === undefined ? undefined : options === "Agree" ? "賛成" : "反対";
 
+  // const message = { answer: options === undefined ? undefined : options === "Agree" ? "賛成" : "反対" };
+  const body =
+    option === undefined
+      ? {
+          inputs: "", // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
+          query: `${inputMessage}`,
+          // response_mode: "blocking",
+          response_mode: "streaming",
+          conversation_id: "", //userIdを入れていく
+          user: "abc-123", //useName
+          files: [
+            {
+              type: "image",
+              transfer_method: "remote_url",
+              url: "https://cloud.dify.ai/logo/logo-site.png",
+            },
+          ],
+        }
+      : {
+          inputs: "", // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
+          query: `${inputMessage}に対して${option}の意見を持っています.`,
+          // response_mode: "blocking",
+          response_mode: "streaming",
+          conversation_id: "", //userIdを入れていく
+          user: "abc-123", //useName
+          files: [
+            {
+              type: "image",
+              transfer_method: "remote_url",
+              url: "https://cloud.dify.ai/logo/logo-site.png",
+            },
+          ],
+        };
   try {
     const response = await fetch("https://api.dify.ai/v1/chat-messages", {
       cache: "force-cache",

@@ -1,10 +1,9 @@
 // "use client";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import React, { useContext } from "react";
+import React from "react";
 import Options from "./Options";
 import Auth from "./Auth";
-import { ChatContext } from "../contexts/ChatContext";
 import { useChatContext } from "./ChatProvider";
 
 interface HeaderProps {

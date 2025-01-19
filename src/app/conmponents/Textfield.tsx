@@ -23,15 +23,20 @@ const Textfield = ({ setMessages }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [isPending, startTransition] = useTransition();
-  const chatContext = useContext(ChatContext);
+  const { title, setTitle, option } = useChatContext();
   const actionMessageWithOptions = async (state: State, formData: FormData) => {
-    return actionMessage(state, formData, chatContext.option);
+    if (title == "") {
+      console.log(" actionMessage(state, formData,  option);");
+      console.log(title);
+      return actionMessage(state, formData, option);
+    } else {
+      console.log(" actionMessage(state, formData);");
+      console.log(title);
+      return actionMessage(state, formData);
+    }
   };
-  // console.log(input);
-
-  // const [state, dispatch] = useActionState(actionMessage, inisialState);
   const [state, dispatch] = useActionState(actionMessageWithOptions, inisialState);
-  const { title,setTitle } = useChatContext();
+
   const textformstyle: object = {
     flexGrow: 1,
     "& .MuiOutlinedInput-root": {
@@ -65,7 +70,7 @@ const Textfield = ({ setMessages }: Props) => {
     },
     // テキストが入力されたときのスタイル
     "& .MuiInputBase-input:not(:placeholder-shown)": {
-      textAlign: "left", // 入力テキストは左寄せ
+      textAlign: "left",
     },
   };
 
@@ -82,12 +87,6 @@ const Textfield = ({ setMessages }: Props) => {
     setIsButtonDisabled(trimmedValue === "");
   }, [input]);
 
-  // useEffect(() => {
-  //   console.log("state.message", state.message);
-
-  //   setMessages((prev: string[]) => [...prev, state.message!]);
-  // }, [state.message]);
-
   const handleSubmit = async (formData: FormData) => {
     const userMessage = formData.get("userMessage") as string;
 
@@ -102,7 +101,7 @@ const Textfield = ({ setMessages }: Props) => {
           formRef.current.reset();
         }
         setInput("");
-        if (title != "") {
+        if (title == "") {
           setTitle(userMessage);
         }
       } catch (e) {
@@ -114,7 +113,7 @@ const Textfield = ({ setMessages }: Props) => {
   return (
     <form ref={formRef} action={handleSubmit} style={{ width: "100%" }}>
       <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden", minHeight: "56px", borderRadius: "40px", width: "100%", bgcolor: (theme) => theme.palette.secondary.main, transition: "height 0.2s ease" }}>
-        <TextField sx={textformstyle} value={input} name="userMessage" placeholder="質問を入力して下さい" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
+        <TextField sx={textformstyle} value={input} name="userMessage" placeholder="AIの規制について...の様に議題を入力して下さい。" multiline fullWidth onChange={adjustHeight} inputRef={textareaRef} />
         <Box sx={{ display: "flex", mr: 1, mb: 1, flexShrink: 0 }}>
           <IconButton
             onClick={() => {
