@@ -3,6 +3,7 @@
 export type State = {
   result: string | null;
   message: string | null;
+  role: string | null;
 };
 
 export const actionMessage = async (_: State, formData: FormData, options?: string): Promise<State> => {
@@ -11,11 +12,11 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
 
   const option = options === undefined ? undefined : options === "Agree" ? "賛成" : "反対";
 
-  // const message = { answer: options === undefined ? undefined : options === "Agree" ? "賛成" : "反対" };
+  const message = { answer: options === undefined ? undefined : options === "Agree" ? "賛成" : "反対" };
   const body =
     option === undefined
       ? {
-          inputs: "", // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
+          inputs: {}, // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
           query: `${inputMessage}`,
           // response_mode: "blocking",
           response_mode: "streaming",
@@ -30,7 +31,8 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
           ],
         }
       : {
-          inputs: "", // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
+          // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
+          inputs: {},
           query: `${inputMessage}に対して${option}の意見を持っています.`,
           // response_mode: "blocking",
           response_mode: "streaming",
@@ -44,6 +46,7 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
             },
           ],
         };
+
   try {
     const response = await fetch("https://api.dify.ai/v1/chat-messages", {
       cache: "force-cache",
@@ -88,9 +91,11 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
       }
     }
 
-    return { result: "ok", message: result };
+    console.log(result);
+
+    return { result: "ok", message: result, role: "assistant" };
   } catch (error) {
     console.log(error);
-    return { result: "error", message: "エラーが発生しました" };
+    return { result: "error", message: "エラーが発生しました", role: "assistant" };
   }
 };
