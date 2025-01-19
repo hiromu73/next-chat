@@ -5,7 +5,6 @@ import { Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { actionMessage, State } from "../api/chat/actions";
-import { ChatContext } from "../contexts/ChatContext";
 import { useChatContext } from "./ChatProvider";
 
 export const inisialState: State = {
@@ -26,35 +25,32 @@ const Textfield = ({ setMessages }: Props) => {
   const { title, setTitle, option } = useChatContext();
   const actionMessageWithOptions = async (state: State, formData: FormData) => {
     if (title == "") {
-      console.log(" actionMessage(state, formData,  option);");
-      console.log(title);
       return actionMessage(state, formData, option);
     } else {
-      console.log(" actionMessage(state, formData);");
-      console.log(title);
       return actionMessage(state, formData);
     }
   };
   const [state, dispatch] = useActionState(actionMessageWithOptions, inisialState);
 
   const textformstyle: object = {
+    p: 1,
     flexGrow: 1,
     "& .MuiOutlinedInput-root": {
       height: "auto",
       "& fieldset": {
-        border: "none", // 通常時の枠線を消す
+        border: "none",
       },
       "&:hover fieldset": {
-        border: "none", // ホバー時の枠線を消す
+        border: "none",
       },
       "&.Mui-focused fieldset": {
-        border: "none", // フォーカス時の枠線を消す
+        border: "none",
       },
     },
     // TextFieldの高さ調整
     "& .MuiInputBase-root": {
       alignItems: "center", // 中央寄せ
-      padding: "8px 14px",
+      padding: "1px 14px",
     },
     // テキストエリアの高さ調整
     "& .MuiInputBase-input": {
@@ -77,7 +73,6 @@ const Textfield = ({ setMessages }: Props) => {
   const adjustHeight = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };

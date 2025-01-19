@@ -12,15 +12,15 @@ type Props = {
   mode?: boolean;
 };
 const Options = ({ setOptions, mode }: Props) => {
-const { setMode, setType } = useChatContext();
+  const { setMode, setType, title } = useChatContext();
 
   return setOptions ? (
-    // 以下disabled判定が必要
     <FormControl fullWidth disabled={false}>
       <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{ color: "#fff" }}>
         <p>Agree or Disagree ?</p>
       </InputLabel>
       <NativeSelect
+        disabled={title != "" ? true : false}
         defaultValue={30}
         inputProps={{
           name: "option",
@@ -33,7 +33,7 @@ const { setMode, setType } = useChatContext();
       </NativeSelect>
     </FormControl>
   ) : mode ? (
-    <FormControl fullWidth disabled={false} sx={{ mt: 2 }}>
+    <FormControl fullWidth disabled={false} sx={{ mt: 2 }} >
       <InputLabel variant="standard" htmlFor="uncontrolled-native" sx={{ color: "#fff" }}>
         <p>Mode</p>
       </InputLabel>

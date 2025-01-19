@@ -1,4 +1,4 @@
-import { Box, Divider, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { Box, Divider, IconButton, Link, List, ListItem, ListItemText } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import Options from "./Options";
@@ -24,9 +24,11 @@ const SideBar = ({ isOpen }: SideBarProps) => {
             }}
           />
         </IconButton>
-        <IconButton edge="end">
-          <CreateRoundedIcon />
-        </IconButton>
+        <Link href="./">
+          <IconButton edge="end">
+            <CreateRoundedIcon />
+          </IconButton>
+        </Link>
       </Box>
       <Box sx={{ flexGrow: 3, ml: 2, overflow: "auto", height: "65%" }}>
         {rows.map((row, index) => (
