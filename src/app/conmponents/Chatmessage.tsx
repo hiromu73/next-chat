@@ -17,7 +17,7 @@ const Chatmessage = ({ message }: ChatMessageProps) => {
   return (
     <Box sx={{ flex: 1, p: 2, width: "100%", maxWidth: "100%", height: "100%", alignSelf: "flex-start", overflowY: "scroll" }}>
       {message.map((msg, index) => (
-        <ChatList key={index} message={msg} />
+        <ChatList key={index} message={msg} user={index % 2 === 0} />
       ))}
     </Box>
   );
