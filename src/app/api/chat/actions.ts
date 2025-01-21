@@ -80,7 +80,7 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
       const lines = chunk.split("\n").filter((line) => line.trim());
       for (const line of lines) {
         if (line.startsWith("data: ")) {
-          const jsonStr = line.slice(6); // "data: " を除去
+          const jsonStr = line.slice(6);
           try {
             const data = JSON.parse(jsonStr);
             result += data.answer || "";

@@ -6,9 +6,6 @@ import { useChatContext } from "./ChatProvider";
 
 interface SideBarProps {
   isOpen: boolean;
-  // setIsOpen: (isOpen: boolean) => void;
-  // setMode: (model: string) => void;
-  // setType: (model: string) => void;
 }
 
 const SideBar = ({ isOpen }: SideBarProps) => {
