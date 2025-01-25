@@ -53,14 +53,14 @@ export default function Home() {
   const { isOpen } = useChatContext();
   return (
     <ThemeProvider theme={darkTheme}>
-      <Box sx={{ display: "flex", height: "100%", width: "100%", bgcolor: "grey.100" }}>
+      <Box sx={{ display: "flex", height: "100vh", width: "100vw", bgcolor: "grey.100" }}>
         <CssBaseline />
         {isOpen && (
           <Box sx={{ display: "flex", width: "15%", height: "100%", flexDirection: "column", bgcolor: (theme) => theme.palette.background.default }}>
             <Sidebar isOpen={isOpen} />
           </Box>
         )}
-        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Box sx={{ flex: 1, flexGrow: 1,display: "flex", flexDirection: "column", height: "100%", width: "100%", }}>
           <Header isOpen={isOpen} />
           <Chatare />
         </Box>
