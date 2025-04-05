@@ -10,13 +10,16 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
   const apiKey = process.env.DIFY_APIKEY || "";
   const inputMessage = formData.get("userMessage");
 
+  console.log("formDate");
+  console.log(formData);
+
   const option = options === undefined ? undefined : options === "Agree" ? "賛成" : "反対";
 
-  const message = { answer: options === undefined ? undefined : options === "Agree" ? "賛成" : "反対" };
+  // const message = { answer: options === undefined ? undefined : options === "Agree" ? "賛成" : "反対" };
   const body =
     option === undefined
       ? {
-          inputs: {}, // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
+          inputs: {},
           query: `${inputMessage}`,
           // response_mode: "blocking",
           response_mode: "streaming",
@@ -91,6 +94,7 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
       }
     }
 
+    console.log("result");
     console.log(result);
 
     return { result: "ok", message: result, role: "assistant" };

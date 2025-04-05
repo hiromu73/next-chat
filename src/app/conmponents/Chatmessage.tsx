@@ -6,6 +6,7 @@ type ChatMessageProps = {
   message: string[];
 };
 
+// messageはlistなのでターン数にできる
 const Chatmessage = ({ message }: ChatMessageProps) => {
   console.log("chatmessage");
   console.log(message);
@@ -14,7 +15,7 @@ const Chatmessage = ({ message }: ChatMessageProps) => {
       {message.map((msg, index) => (
         <ChatList key={index} message={msg} user={index % 2 === 0} />
       ))}
-            <Box sx={{height: "15%"}}></Box>
+      <Box sx={{ height: "15%" }}></Box>
     </Box>
   );
 };
