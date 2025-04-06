@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  password      String? // Supabaseを使う場合、実際のパスワードは保存しない
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  debates       Debate[]
+
+  @@map("users")
+}
+
+model Debate {
+  id            String    @id @default(cuid())
+  title         String
+  topic         String    // ディベートのトピック
+  description   String?   // トピックの詳細説明
+  status        DebateStatus @default(IN_PROGRESS)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  finishedAt    DateTime?
+
+  // リレーション
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages      Message[]
+  scores        Score[]
+
+  @@map("debates")
+}
+
+model Message {
+  id            String    @id @default(cuid())
+  content       String    @db.Text
+  role          Role      // user または ai
+  createdAt     DateTime  @default(now())
+
+  // リレーション
+  debateId      String
+  debate        Debate    @relation(fields: [debateId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Score {
+  id            String    @id @default(cuid())
+  category      String    // 論理性、説得力、反論力など
+  score         Int       // 点数 (例: 0-100)
+  feedback      String?   @db.Text // フィードバックやコメント
+  createdAt     DateTime  @default(now())
+
+  // リレーション
+  debateId      String
+  debate        Debate    @relation(fields: [debateId], references: [id], onDelete: Cascade)
+
+  @@map("scores")
+}
+
+enum Role {
+  USER
+  AI
+}
+
+enum DebateStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}

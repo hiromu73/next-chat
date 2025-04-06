@@ -10,6 +10,7 @@ import { useChatContext } from "./ChatProvider";
 export const inisialState: State = {
   result: null,
   message: null,
+  role: null,
 };
 
 type Props = {
