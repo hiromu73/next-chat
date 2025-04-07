@@ -1,5 +1,5 @@
 "use client";
-import React, { useActionState, useContext, useEffect, useRef, useState, useTransition } from "react";
+import React, { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import TextField from "@mui/material/TextField";
 import { Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
@@ -84,6 +84,7 @@ const Textfield = ({ setMessages }: Props) => {
   }, [input]);
 
   const handleSubmit = async (formData: FormData) => {
+    // getの名前はinputのname
     const userMessage = formData.get("userMessage") as string;
 
     startTransition(async () => {

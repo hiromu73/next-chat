@@ -17,12 +17,13 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   name          String?
+  image         String?
   password      String? // Supabaseを使う場合、実際のパスワードは保存しない
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   debates       Debate[]
 
-  @@map("users")
+  @@map("users") //DBテーブル名とprismaモデルのマッピング
 }
 
 model Debate {
