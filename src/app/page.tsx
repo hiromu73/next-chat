@@ -51,6 +51,10 @@ export default function Home() {
   });
 
   const { isOpen } = useChatContext();
+  // const session = useSession();
+  // console.log("session");
+  // console.log(session);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <Box sx={{ display: "flex", height: "100vh", width: "100vw", bgcolor: "grey.100" }}>
@@ -60,7 +64,7 @@ export default function Home() {
             <Sidebar isOpen={isOpen} />
           </Box>
         )}
-        <Box sx={{ flex: 1, flexGrow: 1,display: "flex", flexDirection: "column", height: "100%", width: "100%", }}>
+        <Box sx={{ flex: 1, flexGrow: 1, display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
           <Header isOpen={isOpen} />
           <Chatare />
         </Box>

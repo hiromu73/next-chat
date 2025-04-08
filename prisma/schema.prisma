@@ -21,55 +21,39 @@ model User {
   password      String? // Supabaseを使う場合、実際のパスワードは保存しない
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  debates       Debate[]
+  debates       Chat[]
 
   @@map("users") //DBテーブル名とprismaモデルのマッピング
 }
 
-model Debate {
+model Chat {
   id            String    @id @default(cuid())
   title         String
-  topic         String    // ディベートのトピック
-  description   String?   // トピックの詳細説明
+  option        String    // ディベートのoption
+  type          String    // ディベートのtype
+  conclusion    String?   // ディベートの勝敗
   status        DebateStatus @default(IN_PROGRESS)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   finishedAt    DateTime?
 
   // リレーション
-  userId        String
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String    @map("user_id")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade) // fields は自身のモデル(Profile)の項目、references にはProfileからみた参照先のモデル(User)の項目をいれる
   messages      Message[]
-  scores        Score[]
+  scores        Int? // ディベートのスコア
 
   @@map("debates")
 }
 
 model Message {
-  id            String    @id @default(cuid())
-  content       String    @db.Text
-  role          Role      // user または ai
-  createdAt     DateTime  @default(now())
-
-  // リレーション
-  debateId      String
-  debate        Debate    @relation(fields: [debateId], references: [id], onDelete: Cascade)
+  id            String       @id @default(cuid())
+  createdAt     DateTime     @default(now())
+  chatMessage   Json     @db.Json
+  chatSessionId String
+  chatSession   Chat  @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
 
   @@map("messages")
-}
-
-model Score {
-  id            String    @id @default(cuid())
-  category      String    // 論理性、説得力、反論力など
-  score         Int       // 点数 (例: 0-100)
-  feedback      String?   @db.Text // フィードバックやコメント
-  createdAt     DateTime  @default(now())
-
-  // リレーション
-  debateId      String
-  debate        Debate    @relation(fields: [debateId], references: [id], onDelete: Cascade)
-
-  @@map("scores")
 }
 
 enum Role {

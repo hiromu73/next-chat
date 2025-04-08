@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import { Box, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import { actionMessage, State } from "../api/chat/actions";
+import { actionMessage, State } from "../api/chat/send/route";
 import { useChatContext } from "./ChatProvider";
 
 export const inisialState: State = {

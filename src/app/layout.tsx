@@ -42,9 +42,9 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en">
-        <body className={inter.className}>
-          <AppRouterCacheProvider>
+      <AppRouterCacheProvider>
+        <html lang="en">
+          <body className={inter.className}>
             <Box sx={{ display: "flex" }}>
               <CssBaseline />
               <ChatProvider>
@@ -53,9 +53,9 @@ export default function RootLayout({
                 </Box>
               </ChatProvider>
             </Box>
-          </AppRouterCacheProvider>
-        </body>
-      </html>
+          </body>
+        </html>
+      </AppRouterCacheProvider>
     </ClerkProvider>
   );
 }
