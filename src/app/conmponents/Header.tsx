@@ -8,13 +8,10 @@ import { useChatContext } from "./ChatProvider";
 
 interface HeaderProps {
   isOpen: boolean;
-  // setIsOpen: (isOpen: boolean) => void;
-  // setOption: (options: string) => void;
 }
 
 const Header = ({ isOpen }: HeaderProps) => {
   const { setIsOpen, setOption, title } = useChatContext();
-  console.log("header");
   return (
     <Box sx={{ p: 2, bgcolor: (theme) => theme.palette.background.paper, width: "100%", display: "flex", alignItems: "center", gap: "10px" }}>
       {!isOpen && (
@@ -23,7 +20,6 @@ const Header = ({ isOpen }: HeaderProps) => {
         </IconButton>
       )}
       <Box sx={{ flexGrow: 1 }}>
-        {/* Chat中はdisable, 初回は必須にする */}
         <Options setOptions={setOption} />
       </Box>
       <Box sx={{ flexGrow: 10 }}>

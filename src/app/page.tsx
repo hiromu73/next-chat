@@ -51,9 +51,6 @@ export default function Home() {
   });
 
   const { isOpen } = useChatContext();
-  // const session = useSession();
-  // console.log("session");
-  // console.log(session);
 
   return (
     <ThemeProvider theme={darkTheme}>
