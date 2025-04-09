@@ -22,39 +22,31 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
   console.log(formData);
 
   const option = options === undefined ? undefined : options === "Agree" ? "賛成" : "反対";
-  const body =
-    option === undefined
-      ? {
-          inputs: {},
-          query: `${inputMessage}`,
-          // response_mode: "blocking",
-          response_mode: "streaming",
-          conversation_id: "", //userIdを入れていく
-          user: "abc-123", //useName
-          files: [
-            {
-              type: "image",
-              transfer_method: "remote_url",
-              url: "https://cloud.dify.ai/logo/logo-site.png",
-            },
-          ],
-        }
-      : {
-          // 必須 nullやから文字不可 => 必要ない？ → 必要なければdify上で削除する
-          inputs: {},
-          query: `${inputMessage}に対して${option}の意見を持っています.`,
-          // response_mode: "blocking",
-          response_mode: "streaming",
-          conversation_id: "", //userIdを入れていく
-          user: "abc-123", //useName
-          files: [
-            {
-              type: "image",
-              transfer_method: "remote_url",
-              url: "https://cloud.dify.ai/logo/logo-site.png",
-            },
-          ],
-        };
+  // const query = inputMessage!.toString().replace(/\r\n\r\n/g, "");
+  // console.log(`inputMessage : ${inputMessage}`);
+  // console.log(`query : ${query}`);
+
+  const query = option === undefined ? inputMessage : `${inputMessage}に対して${option}の意見を持っています.`;
+  console.log(`query : ${query}`);
+
+  const body = {
+    inputs: {},
+    query: query,
+    // response_mode: "blocking", //Agentがblocking modeを対応していない
+    response_mode: "streaming",
+    conversation_id: "", //userIdを入れていく
+    user: "abc-123", //useName
+    files: [
+      {
+        type: "image",
+        transfer_method: "remote_url",
+        url: "https://cloud.dify.ai/logo/logo-site.png",
+      },
+    ],
+  };
+
+  console.log("body");
+  console.log(body);
 
   try {
     const response = await fetch("https://api.dify.ai/v1/chat-messages", {
@@ -92,7 +84,7 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
     }
 
     let result = "";
-    while (true) {
+    while (reader) {
       const { done, value } = await reader.read();
       if (done) break;
 
@@ -115,6 +107,9 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
 
     console.log("result");
     console.log(result);
+    if (result.startsWith("ターン")) {
+      result = result.replace("ターン", "");
+    }
 
     return { result: "ok", message: result, role: "assistant" };
   } catch (error) {

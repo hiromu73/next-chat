@@ -14,7 +14,6 @@ export async function POST(req: Request) {
 
   // Create new Svix instance with secret
   const wh = new Webhook(SIGNING_SECRET);
-
   // Get headers
   const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
@@ -35,6 +34,8 @@ export async function POST(req: Request) {
   let evt: WebhookEvent;
 
   // Verify payload with headers
+  console.log("WebhookEvent");
+
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -52,11 +53,13 @@ export async function POST(req: Request) {
   // For this guide, log payload to console
   // const { id } = evt.data;
   const eventType = evt.type;
+
+  console.log(evt.data);
+
   console.log("eventType");
   console.log(eventType);
   if (eventType === "user.created") {
-    console.log("user.created");
-
+    console.log("2度目のuser.created");
     try {
       await prisma.user.create({
         data: {

@@ -1,6 +1,6 @@
 // "use client"
 import { Box, Typography } from "@mui/material";
-import React, from "react";
+import React from "react";
 import Textfield from "./Textfield";
 import Chatmessage from "./Chatmessage";
 import { useChatContext } from "./ChatProvider";
@@ -12,15 +12,25 @@ const Chatare = () => {
   const test_1 = true;
   const { message, setMessage } = useChatContext();
   return test_1 ? (
-    <Box sx={{ bgcolor: (theme) => theme.palette.background.paper, width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1,
-          overflowY: 'auto',
-          p: 2,
-          '&::-webkit-scrollbar': {
-            width: '5px',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            borderRadius: '5px',
-          }, }}>
+    <Box
+      sx={{
+        bgcolor: (theme) => theme.palette.background.paper,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        flexGrow: 1,
+        overflowY: "auto",
+        p: 2,
+        "&::-webkit-scrollbar": {
+          width: "5px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          borderRadius: "5px",
+        },
+      }}
+    >
       <Box sx={{ width: "70%", height: "90%", display: "flex", flexDirection: "column" }}>
         <Chatmessage message={message} />
       </Box>
