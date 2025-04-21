@@ -3,15 +3,22 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-export type State = {
+interface State {
   result: string | null;
   message: string | null;
   role: string | null;
-};
-
+}
 export const actionMessage = async (_: State, formData: FormData, options?: string): Promise<State> => {
+  const role = {
+    user: "user",
+    assistant: "assistant",
+  } as const;
+
   const apiKey = process.env.DIFY_APIKEY || "";
   const inputMessage = formData.get("userMessage");
+  if (typeof inputMessage !== "string") {
+    throw new Error("userMessage is not a valid string");
+  }
   const { userId, redirectToSignIn } = await auth();
   console.log("userId");
   console.log(userId);
@@ -22,20 +29,16 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
   console.log(formData);
 
   const option = options === undefined ? undefined : options === "Agree" ? "賛成" : "反対";
-  // const query = inputMessage!.toString().replace(/\r\n\r\n/g, "");
-  // console.log(`inputMessage : ${inputMessage}`);
-  // console.log(`query : ${query}`);
-
   const query = option === undefined ? inputMessage : `${inputMessage}に対して${option}の意見を持っています.`;
   console.log(`query : ${query}`);
 
   const body = {
     inputs: {},
     query: query,
-    // response_mode: "blocking", //Agentがblocking modeを対応していない
+    // response_mode: "blocking", // Agentがblocking modeを対応していない
     response_mode: "streaming",
-    conversation_id: "", //userIdを入れていく
-    user: "abc-123", //useName
+    conversation_id: "", // userIdを入れていく
+    user: "abc-123", // useName
     files: [
       {
         type: "image",
@@ -60,7 +63,6 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
       next: { revalidate: 60 },
     });
 
-    // レスポンスがストリームの場合の処理
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     } else if (response.ok && option !== undefined) {
@@ -69,8 +71,29 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
           data: {
             title: inputMessage as string,
             option: option,
-            type: "text",
+            type: "text", // 仮
+            // mode: "mode"  TODO: schemを作る、APIに含む作業をする
             userId: userId,
+          },
+        });
+        console.log(`Dify - inputmessage : ${inputMessage}`);
+        await prisma.message.create({
+          data: {
+            role: role.user,
+            chatMessage: inputMessage,
+            chatSessionId: userId,
+          },
+        });
+      } catch (e) {
+        console.log(`Error creating chat: ${e}`);
+      }
+    } else {
+      try {
+        await prisma.message.create({
+          data: {
+            role: role.user,
+            chatMessage: inputMessage,
+            chatSessionId: userId,
           },
         });
       } catch (e) {
@@ -94,9 +117,13 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
       const lines = chunk.split("\n").filter((line) => line.trim());
       for (const line of lines) {
         if (line.startsWith("data: ")) {
+          // console.log(`lines -- ${lines}`);
+          // console.log(`line -- ${line}`);
+
           const jsonStr = line.slice(6);
           try {
             const data = JSON.parse(jsonStr);
+            // console.log(`data -- ${data}`);
             result += data.answer || "";
           } catch (e) {
             console.log(`Invalid JSON in ${e}stream:`, jsonStr);
@@ -105,10 +132,23 @@ export const actionMessage = async (_: State, formData: FormData, options?: stri
       }
     }
 
-    console.log("result");
-    console.log(result);
     if (result.startsWith("ターン")) {
       result = result.replace("ターン", "");
+    }
+
+    if (result != "") {
+      try {
+        console.log(`Dify - result : ${result}`);
+        await prisma.message.create({
+          data: {
+            role: role.assistant,
+            chatMessage: result,
+            chatSessionId: userId,
+          },
+        });
+      } catch (e) {
+        console.log(`Error creating chat: ${e}`);
+      }
     }
 
     return { result: "ok", message: result, role: "assistant" };

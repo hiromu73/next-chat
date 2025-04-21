@@ -7,6 +7,7 @@
 generator client {
   provider = "prisma-client-js"
   output = "../generated/prisma"
+  binaryTargets = ["native", "darwin-arm64"]
 }
 
 datasource db {
@@ -14,51 +15,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// デコレータはフィールドとモデルとでは@の数が違う
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(cuid()) // フィールドを主キーとする。フィールドレベルでは「@」は1つ
   name          String?
   image         String?
   password      String? // Supabaseを使う場合、実際のパスワードは保存しない
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now()) // フィールドのデフォルト値を設定す
+  updatedAt     DateTime  @updatedAt // フィールドの更新日時を自動的に設定する
   debates       Chat[]
 
-  @@map("users") //DBテーブル名とprismaモデルのマッピング
+  @@map("users") // DBテーブル名
 }
 
 model Chat {
   id            String    @id @default(cuid())
   title         String
-  option        String    // ディベートのoption
-  type          String    // ディベートのtype
-  conclusion    String?   // ディベートの勝敗
+  option        String
+  type          String
+  conclusion    String?
   status        DebateStatus @default(IN_PROGRESS)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   finishedAt    DateTime?
 
   // リレーション
-  userId        String    @map("user_id")
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade) // fields は自身のモデル(Profile)の項目、references にはProfileからみた参照先のモデル(User)の項目をいれる
+  userId        String  @map("user_id")
+  // fieldsは自身のmodelのフィールド、referencesにはこのmodelからみた参照先のモデル(User)のフィールド
+  // onDelete: Cascadeを指定することで親が削除された際に子も削除される
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages      Message[]
-  scores        Int? // ディベートのスコア
+  scores        Int?
 
   @@map("debates")
 }
 
 model Message {
   id            String       @id @default(cuid())
+  role          String
   createdAt     DateTime     @default(now())
-  chatMessage   Json     @db.Json
+  chatMessage   String
   chatSessionId String
   chatSession   Chat  @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
 
   @@map("messages")
-}
-
-enum Role {
-  USER
-  AI
 }
 
 enum DebateStatus {
